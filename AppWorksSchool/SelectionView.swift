@@ -49,6 +49,35 @@ class SelectionView: UIView
         let titleFont: UIFont
     }
     
-    weak open var dataSource: UITableViewDataSource?
-    weak open var delegate: UITableViewDelegate?
+    weak open var dataSource: SelectionViewDataSource?
+    weak open var delegate: SelectionViewDelegate?
+    
+    private let stackView: UIStackView = .init()
+    
+    required init?(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+    }
+    
+    override init(frame: CGRect)
+    {
+        super.init(frame: frame)
+    }
+    
+    func layoutUI()
+    {
+        guard let ds = dataSource else { return }
+        
+        for index: Int in 0..<ds.numberOfButtons(in: self)
+        {
+            let button: UIButton = .init()
+            let buttonModel = ds.selectionView(self, buttonAt: index)
+            button.setTitle(buttonModel.title, for: .normal)
+            button.setTitleColor(buttonModel.titleColor, for: .normal)
+            button.titleLabel?.font = buttonModel.titleFont
+            stackView.addArrangedSubview(button)
+        }
+        
+        stackView.axis = .horizontal
+    }
 }
