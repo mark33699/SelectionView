@@ -54,16 +54,15 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
     {
         return [redModel, yellowModel]
     }
-    private var colorModelsBottom: Array<ColorModel>
-    {
-        return [redModel, yellowModel, blueModel]
-    }
+    private var colorModelsBottom: Array<ColorModel> = []
     
     //MARK: UI
     override func viewDidLoad()
     {
         super.viewDidLoad()
         view.backgroundColor = .black
+        
+        colorModelsBottom = [redModel, yellowModel, blueModel]
         
         selectViewTop.dataSource = self
         selectViewTop.delegate = self
@@ -78,14 +77,19 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         colorViewTop.backgroundColor = colorModelsTop.first?.color
         colorViewBottom.backgroundColor = colorModelsBottom.first?.color
         
-        let stackView = UIStackView.init(arrangedSubviews: [selectViewTop, colorViewTop, selectViewBottom, colorViewBottom])
+        let reloadButton = UIButton()
+        reloadButton.setTitle("RELOAD!", for: .normal)
+        reloadButton.setTitleColor(.red, for: .normal)
+        reloadButton.addTarget(self, action: #selector(reload), for: .touchUpInside)
+        
+        let stackView = UIStackView.init(arrangedSubviews: [selectViewTop, colorViewTop, selectViewBottom, colorViewBottom, reloadButton])
         view.addSubview(stackView)
         let safeArea = view.safeAreaLayoutGuide
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 100).isActive = true
         stackView.leftAnchor.constraint(equalTo: safeArea.leftAnchor).isActive = true
         stackView.rightAnchor.constraint(equalTo: safeArea.rightAnchor).isActive = true
-        stackView.heightAnchor.constraint(equalToConstant: 400).isActive = true
+        stackView.heightAnchor.constraint(equalToConstant: 500).isActive = true
         
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
@@ -153,5 +157,15 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         default:
             print("selectionViewDidSelect exception")
         }
+    }
+    
+    //MARK: Seletor
+    @objc func reload(btn: UIButton)
+    {
+        colorModelsBottom.append(.init(color: .green,
+                                       buttonModel: .init(title: "Green",
+                                                          titleColor: defaultButtonColor,
+                                                          titleFont: defaultButtonFont)))
+        selectViewBottom.reloadData()
     }
 }

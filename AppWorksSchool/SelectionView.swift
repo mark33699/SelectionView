@@ -56,36 +56,15 @@ class SelectionView: UIView
     private var indicatorWidthConstraint: NSLayoutConstraint = .init()
     private var indicatorLeftConstraint: NSLayoutConstraint = .init()
     private let indicatorHeight: CGFloat = 2
-    private let stackView: UIStackView = .init()
+    private var stackView: UIStackView = .init()
     
     weak open var delegate: SelectionViewDelegate?
     weak open var dataSource: SelectionViewDataSource?
     {
-        willSet
+        didSet
         {
-            guard let ds = newValue else { return }
-            
-            for index: Int in 0..<ds.numberOfButtons(in: self)
-            {
-                let button: UIButton = .init()
-                let buttonModel = ds.selectionView(self, buttonAt: index)
-                button.setTitle(buttonModel.title, for: .normal)
-                button.setTitleColor(buttonModel.titleColor, for: .normal)
-                button.titleLabel?.font = buttonModel.titleFont
-                button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-                button.tag = index
-                stackView.addArrangedSubview(button)
-            }
-            indicatorView.backgroundColor = ds.indicatorColor(in: self)
-            layoutSubviews() //確保不會layout後才得到dataSource
+            reloadData()
         }
-    }
-    
-    override func layoutSubviews()
-    {
-        super.layoutSubviews()
-        guard let ds = dataSource else { return }
-        indicatorWidthConstraint.constant = stackView.frame.width / CGFloat(ds.numberOfButtons(in: self))
     }
     
     required init?(coder aDecoder: NSCoder)
@@ -98,6 +77,14 @@ class SelectionView: UIView
     {
         super.init(frame: frame)
         layoutUI()
+    }
+    
+    //MARK: UI
+    override func layoutSubviews()
+    {
+        super.layoutSubviews()
+        guard let ds = dataSource else { return }
+        indicatorWidthConstraint.constant = stackView.frame.width / CGFloat(ds.numberOfButtons(in: self))
     }
     
     private func layoutUI()
@@ -123,6 +110,7 @@ class SelectionView: UIView
         indicatorWidthConstraint.isActive = true
     }
     
+    //MARK: Selector
     @objc func didTapButton(btn: UIButton)
     {
         //當不能選擇的時候，IndicatorView 不會移動，使用者選擇選項的 Delegate method 也不會被觸發。
@@ -139,5 +127,32 @@ class SelectionView: UIView
                 self.layoutIfNeeded() //動畫會動的關鍵
             }
         }
+    }
+    
+    //MARK: Public function
+    func reloadData()
+    {
+        guard let ds = dataSource else { return }
+        
+        //把舊的按鈕清掉
+        stackView.arrangedSubviews.forEach
+        { (subview) in
+            subview.removeFromSuperview()
+        }
+        
+        for index: Int in 0..<ds.numberOfButtons(in: self)
+        {
+            let button: UIButton = .init()
+            let buttonModel = ds.selectionView(self, buttonAt: index)
+            button.setTitle(buttonModel.title, for: .normal)
+            button.setTitleColor(buttonModel.titleColor, for: .normal)
+            button.titleLabel?.font = buttonModel.titleFont
+            button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+            button.tag = index
+            stackView.addArrangedSubview(button)
+        }
+        indicatorView.backgroundColor = ds.indicatorColor(in: self)
+        layoutSubviews() //確保不會layout後才得到dataSource
+        indicatorLeftConstraint.constant = 0
     }
 }
