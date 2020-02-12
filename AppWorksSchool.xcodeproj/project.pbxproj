@@ -14,6 +14,8 @@
 		DA246CD523F14E7C006C942C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA246CD423F14E7C006C942C /* Assets.xcassets */; };
 		DA246CD823F14E7C006C942C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA246CD623F14E7C006C942C /* LaunchScreen.storyboard */; };
 		DA246CE023F15CBE006C942C /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA246CDF23F15CBE006C942C /* SelectionView.swift */; };
+		DA76BFA323F3B2AA0029C0D3 /* DelegatePractice.gif in Resources */ = {isa = PBXBuildFile; fileRef = DA76BFA123F3B2AA0029C0D3 /* DelegatePractice.gif */; };
+		DA76BFA423F3B2AA0029C0D3 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DA76BFA223F3B2AA0029C0D3 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		DA246CD723F14E7C006C942C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DA246CD923F14E7C006C942C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA246CDF23F15CBE006C942C /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
+		DA76BFA123F3B2AA0029C0D3 /* DelegatePractice.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = DelegatePractice.gif; sourceTree = "<group>"; };
+		DA76BFA223F3B2AA0029C0D3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,7 @@
 		DA246CC923F14E7A006C942C /* AppWorksSchool */ = {
 			isa = PBXGroup;
 			children = (
+				DA76BFA023F3B2800029C0D3 /* exam */,
 				DA246CCA23F14E7A006C942C /* AppDelegate.swift */,
 				DA246CCC23F14E7A006C942C /* ViewController.swift */,
 				DA246CCE23F14E7A006C942C /* Main.storyboard */,
@@ -68,6 +73,15 @@
 				DA246CDF23F15CBE006C942C /* SelectionView.swift */,
 			);
 			path = AppWorksSchool;
+			sourceTree = "<group>";
+		};
+		DA76BFA023F3B2800029C0D3 /* exam */ = {
+			isa = PBXGroup;
+			children = (
+				DA76BFA123F3B2AA0029C0D3 /* DelegatePractice.gif */,
+				DA76BFA223F3B2AA0029C0D3 /* README.md */,
+			);
+			path = exam;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,6 +144,8 @@
 			files = (
 				DA246CD823F14E7C006C942C /* LaunchScreen.storyboard in Resources */,
 				DA246CD523F14E7C006C942C /* Assets.xcassets in Resources */,
+				DA76BFA423F3B2AA0029C0D3 /* README.md in Resources */,
+				DA76BFA323F3B2AA0029C0D3 /* DelegatePractice.gif in Resources */,
 				DA246CD023F14E7A006C942C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
