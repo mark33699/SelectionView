@@ -55,7 +55,9 @@ class SelectionView: UIView
     private let indicatorView: UIView = .init()
     private var indicatorWidthConstraint: NSLayoutConstraint = .init()
     private var indicatorLeftConstraint: NSLayoutConstraint = .init()
+    private let indicatorHeight: CGFloat = 2
     private let stackView: UIStackView = .init()
+    
     weak open var delegate: SelectionViewDelegate?
     weak open var dataSource: SelectionViewDataSource?
     {
@@ -98,7 +100,7 @@ class SelectionView: UIView
         layoutUI()
     }
     
-    func layoutUI()
+    private func layoutUI()
     {
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
@@ -107,13 +109,13 @@ class SelectionView: UIView
         stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         stackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         stackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -indicatorHeight).isActive = true
         
         indicatorView.backgroundColor = .cyan
         addSubview(indicatorView)
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
         indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        indicatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        indicatorView.heightAnchor.constraint(equalToConstant: indicatorHeight).isActive = true
         
         indicatorLeftConstraint = indicatorView.leftAnchor.constraint(equalTo: leftAnchor)
         indicatorLeftConstraint.isActive = true
@@ -123,15 +125,14 @@ class SelectionView: UIView
     
     @objc func didTapButton(btn: UIButton)
     {
+        //當不能選擇的時候，IndicatorView 不會移動，使用者選擇選項的 Delegate method 也不會被觸發。
         guard let dlg = delegate else { return }
-        
         if dlg.selectionView?(self, shouldSelectAt: btn.tag) ?? true
         {
             dlg.selectionView?(self, didSelectAt: btn.tag)
             
             guard let ds = dataSource else { return }
-            
-            UIView.animate(withDuration: 2)
+            UIView.animate(withDuration: 0.5)
             {
                 let width = self.stackView.frame.width / CGFloat(ds.numberOfButtons(in: self))
                 self.indicatorLeftConstraint.constant = width * CGFloat(btn.tag)
