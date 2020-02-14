@@ -10,10 +10,33 @@ import UIKit
 
 class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDelegate
 {
-    struct ColorModel
+    enum ColorType: String
     {
-        let color: UIColor
-        let buttonModel: SelectionView.ButtonModel
+        case red = "Red"
+        case yellow = "Yellow"
+        case green = "Green"
+        case blue = "Blue"
+        
+        private var defaultButtonColor: UIColor { return .white }
+        private var defaultButtonFont: UIFont { return .systemFont(ofSize: 18) }
+        
+        var color: UIColor
+        {
+            switch self
+            {
+                case .red: return .red
+                case .yellow: return .yellow
+                case .blue: return .blue
+                case .green: return .green
+            }
+        }
+        
+        var buttonModel: SelectionView.ButtonModel
+        {
+            return .init(title: self.rawValue,
+                         titleColor: defaultButtonColor,
+                         titleFont: defaultButtonFont)
+        }
     }
     
     private var shouldTapBottomSelectView: Bool = true
@@ -24,37 +47,11 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
     private let selectViewTop: SelectionView = .init()
     private let selectViewBottom: SelectionView = .init()
     
-    private let defaultButtonColor: UIColor = .white
-    private let defaultButtonFont: UIFont = .systemFont(ofSize: 18)
-    
-    //MARK: dataModel
-    private var redModel: ColorModel
+    private var colorTypesBottom: Array<ColorType> = []
+    private var colorTypesTop: Array<ColorType>
     {
-        return .init(color: .red,
-                     buttonModel: .init(title: "Red",
-                                        titleColor: defaultButtonColor,
-                                        titleFont: defaultButtonFont))
+        return [.red, .yellow]
     }
-    private var yellowModel: ColorModel
-    {
-        return .init(color: .yellow,
-                     buttonModel: .init(title: "Yellow",
-                                        titleColor: defaultButtonColor,
-                                        titleFont: defaultButtonFont))
-    }
-    private var blueModel: ColorModel
-    {
-        return .init(color: .blue,
-                     buttonModel: .init(title: "Blue",
-                                        titleColor: defaultButtonColor,
-                                        titleFont: defaultButtonFont))
-    }
-    
-    private var colorModelsTop: Array<ColorModel>
-    {
-        return [redModel, yellowModel]
-    }
-    private var colorModelsBottom: Array<ColorModel> = []
     
     //MARK: UI
     override func viewDidLoad()
@@ -62,7 +59,7 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        colorModelsBottom = [redModel, yellowModel, blueModel]
+        colorTypesBottom = [.red, .yellow, .blue]
         
         selectViewTop.dataSource = self
         selectViewTop.delegate = self
@@ -74,8 +71,8 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
     
     private func layoutUI()
     {
-        colorViewTop.backgroundColor = colorModelsTop.first?.color
-        colorViewBottom.backgroundColor = colorModelsBottom.first?.color
+        colorViewTop.backgroundColor = colorTypesTop.first?.color
+        colorViewBottom.backgroundColor = colorTypesBottom.first?.color
         
         let reloadButton = UIButton()
         reloadButton.setTitle("RELOAD!", for: .normal)
@@ -101,9 +98,9 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         switch selectionView
         {
         case selectViewTop:
-            return colorModelsTop.count
+            return colorTypesTop.count
         case selectViewBottom:
-            return colorModelsBottom.count
+            return colorTypesBottom.count
         default:
             print("numberOfButtons exception")
             return 0
@@ -115,9 +112,9 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         switch selectionView
         {
         case selectViewTop:
-            return colorModelsTop[index].buttonModel
+            return colorTypesTop[index].buttonModel
         case selectViewBottom:
-            return colorModelsBottom[index].buttonModel
+            return colorTypesBottom[index].buttonModel
         default:
             print("selectionViewButton exception")
             return .init(title: "", titleColor: .white, titleFont: .systemFont(ofSize: 18))
@@ -149,11 +146,11 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
         switch selectionView
         {
         case selectViewTop:
-            colorViewTop.backgroundColor = colorModelsTop[index].color
+            colorViewTop.backgroundColor = colorTypesTop[index].color
             //如果上方的 SelectionView 目前選取的 button 是最後一個，那下方的 SelectionView 則不可以被使用者控制。
-            shouldTapBottomSelectView = index == colorModelsTop.count - 1 ? false : true
+            shouldTapBottomSelectView = index == colorTypesTop.count - 1 ? false : true
         case selectViewBottom:
-            colorViewBottom.backgroundColor = colorModelsBottom[index].color
+            colorViewBottom.backgroundColor = colorTypesBottom[index].color
         default:
             print("selectionViewDidSelect exception")
         }
@@ -162,10 +159,7 @@ class ViewController: UIViewController, SelectionViewDataSource, SelectionViewDe
     //MARK: Seletor
     @objc func reload(btn: UIButton)
     {
-        colorModelsBottom.append(.init(color: .green,
-                                       buttonModel: .init(title: "Green",
-                                                          titleColor: defaultButtonColor,
-                                                          titleFont: defaultButtonFont)))
+        colorTypesBottom.append(.green)
         selectViewBottom.reloadData()
     }
 }
